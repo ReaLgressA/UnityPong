@@ -32,9 +32,7 @@
                     var paddle = hits[0].transform.GetComponent<Paddle>();
                     Bounce(paddle);
                 }
-            } else if(Bounce()) {
-                Debug.Log("Wallbounced");
-            } else {
+            } else if(!Bounce()) {
                 CheckForGoal();
             }
         }

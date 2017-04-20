@@ -23,7 +23,6 @@
                     break;
                 }
             }
-            Debug.Log("Ball spd: " + spd);
             return spd;
         }
 

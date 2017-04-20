@@ -2,15 +2,17 @@
     using UnityEngine;
 
     public class NetworkController : MonoBehaviour {
-
+        LanBroadcaster lanBc;
 
         void Start() {
-            LanBroadcaster lanBc = GetComponent<LanBroadcaster>();
-            lanBc.StartSearchBroadCasting(ConnectToServer, StartServer);
+            lanBc = GetComponent<LanBroadcaster>();
+            lanBc.StartSearchBroadCasting(ConnectToServer, StartServer, 22043);
         }
 
         private void StartServer() {
-            Debug.LogError("Server should be started");
+            Debug.LogError("Starting Server");
+            lanBc.StopBroadCasting();
+            lanBc.StartAnnounceBroadCasting();
         }
 
         private void ConnectToServer(string ip) {
