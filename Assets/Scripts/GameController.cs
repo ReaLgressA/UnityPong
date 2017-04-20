@@ -1,6 +1,5 @@
 ﻿namespace Pong
 {
-    using Pong.Network;
     using System;
     using System.Net;
     using System.Net.Sockets;
@@ -24,9 +23,7 @@
         public float batMaxVelocity;
         public Text textScoreLeft;
         public Text textScoreRight;
-        UdpClient client;
-        UdpListener udp;
-
+        
         public Paddle[] bats;
 
         public static GameController Instance { get { return instance; } }
