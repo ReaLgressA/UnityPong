@@ -1,5 +1,4 @@
 ﻿namespace Pong {
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class PaddleAI : Paddle {
@@ -57,41 +56,25 @@
             }
         }
 
-        public RectTransform[] testTrs;
-        private List<Vector2> test = new List<Vector2>();
-        private void updateTest() {
-            Gizmos.color = Color.red;
-            int i;
-            for(i= 0; i < test.Count; ++i) {
-                testTrs[i].anchoredPosition = test[i];
-            }
-            for(; i < testTrs.Length; ++i) {
-                testTrs[i].anchoredPosition = Vector2.zero;
-            }
-        }
-
         private float CalculateBallGoalPosY() {
             var pos = ball.Pos;
             var dir = ball.Dir;
             float shift;
-            test.Clear();
             if(!isLeftSide) {
                 while(pos.x < GameController.Instance.rightBorder) {
                     if(dir.y > 0) {
-                        shift = Mathf.Abs((GameController.Instance.topBorder - ball.Radius - pos.y) / dir.y);
+                        shift = Mathf.Abs((GameController.Instance.TopBorder - ball.Radius - pos.y) / dir.y);
                         if((pos + dir * shift).x < GameController.Instance.rightBorder - ball.Radius*2) {
                             pos += dir * shift;
                             dir.y = -dir.y;
-                            test.Add(pos);
                         } else {
                             break;
                         }
                     } else {
-                        shift = Mathf.Abs(Mathf.Abs(GameController.Instance.botBorder + ball.Radius - pos.y) / dir.y);
+                        shift = Mathf.Abs(Mathf.Abs(GameController.Instance.BotBorder + ball.Radius - pos.y) / dir.y);
                         if((pos + dir * shift).x < GameController.Instance.rightBorder - ball.Radius*2) {
                             pos += dir * shift;
                             dir.y = -dir.y;
-                            test.Add(pos);
                         } else {
                             break;
                         }
@@ -99,16 +82,11 @@
                 }
                 shift = (GameController.Instance.rightBorder - ball.Radius*4 - pos.x) / dir.x;
                 pos += dir * shift;
-                test.Add(pos);
-                if(pos.y < GameController.Instance.botBorder || pos.y > GameController.Instance.topBorder) {
-                    Debug.Log("Meh");
-                }
-                updateTest();
                 return pos.y;
             } else {
                 while(pos.x > GameController.Instance.leftBorder) {
                     if(dir.y > 0) {
-                        shift = Mathf.Abs((GameController.Instance.topBorder - ball.Radius - pos.y) / dir.y);
+                        shift = Mathf.Abs((GameController.Instance.TopBorder - ball.Radius - pos.y) / dir.y);
                         if((pos + dir * shift).x > GameController.Instance.leftBorder + ball.Radius*2) {
                             pos += dir * shift;
                             dir.y = -dir.y;
@@ -116,7 +94,7 @@
                             break;
                         }
                     } else {
-                        shift = Mathf.Abs(Mathf.Abs(GameController.Instance.botBorder + ball.Radius - pos.y) / dir.y);
+                        shift = Mathf.Abs(Mathf.Abs(GameController.Instance.BotBorder + ball.Radius - pos.y) / dir.y);
                         if((pos + dir * shift).x > GameController.Instance.leftBorder + ball.Radius*2) {
                             pos += dir * shift;
                             dir.y = -dir.y;
@@ -127,11 +105,6 @@
                 }
                 shift = (GameController.Instance.leftBorder + ball.Radius*2 - pos.x) / dir.x;
                 pos += dir * shift;
-                test.Add(pos);
-                if(pos.y < GameController.Instance.botBorder || pos.y > GameController.Instance.topBorder) {
-                    Debug.Log("Meh");
-                }
-                updateTest();
                 return pos.y;
             }
         }

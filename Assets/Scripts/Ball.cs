@@ -1,5 +1,4 @@
 ﻿namespace Pong {
-    using System.Collections.Generic;
     using UnityEngine;
 
     public class Ball : MonoBehaviour {
@@ -19,6 +18,7 @@
             tr = GetComponent<RectTransform>();
             Launch(new Vector3(-0.9f, 0.1f));
         }
+
         private RaycastHit2D[] hits = new RaycastHit2D[3];
         void Update() {
             var oldPos = tr.position;
@@ -26,10 +26,8 @@
             var dist = velocity * Time.deltaTime;
             pos += dir * dist;
             tr.anchoredPosition = pos;
-            //pos += dir * (dir.x > 0 ? Radius : (-Radius));
             var vec = tr.position - oldPos;
             if(Physics2D.CircleCastNonAlloc(oldPos, Radius, vec.normalized, hits, vec.magnitude) > 0) {
-                //tr.position = hits[0].point;
                 if(hits[0].transform.tag == "Paddle") {
                     var paddle = hits[0].transform.GetComponent<Paddle>();
                     Bounce(paddle);
@@ -39,7 +37,6 @@
             } else {
                 CheckForGoal();
             }
-            
         }
 
         private void CheckForGoal() {
@@ -54,13 +51,13 @@
         /// Handle interception with walls
         /// </summary>
         private bool Bounce() {
-            if(tr.anchoredPosition.y + Radius > GameController.Instance.topBorder) {
-                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.topBorder - Radius);
+            if(tr.anchoredPosition.y + Radius > GameController.Instance.TopBorder) {
+                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.TopBorder - Radius);
                 dir.y = -dir.y;
                 return true;
             }
-            if(tr.anchoredPosition.y - Radius < GameController.Instance.botBorder) {
-                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.botBorder + Radius);
+            if(tr.anchoredPosition.y - Radius < GameController.Instance.BotBorder) {
+                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.BotBorder + Radius);
                 dir.y = -dir.y;
                 return true;
             }
@@ -80,7 +77,6 @@
             ++hitCounter;
             tr.anchoredPosition = new Vector2(Pos.x + (xSign ? (Radius ) : (-Radius )), Pos.y);
             UpdateVelocity();
-            //paddle.BallBounced();
         }
 
         private void UpdateVelocity() {

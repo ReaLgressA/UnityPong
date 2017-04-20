@@ -9,8 +9,11 @@
 
     public class GameController : MonoBehaviour {
         private static GameController instance = null;
-        public float topBorder;
-        public float botBorder;
+        private float topBorder;
+        private float botBorder;
+        public Canvas gameCanvas;
+        public float TopBorder { get { return topBorder; } }
+        public float BotBorder { get { return botBorder; } }
         public float leftBorder;
         public float rightBorder;
         public float batBasicVelocity;
@@ -38,11 +41,14 @@
             instance = this;
             ball = FindObjectOfType<Ball>();
             InitializeBats();
+            topBorder = gameCanvas.GetComponent<RectTransform>().sizeDelta.y / 2 - ball.Radius * 2;
+            botBorder = -topBorder;
         }
         
         private void InitializeBats() {
             bats = FindObjectsOfType<Paddle>();
         }
+
 
         public void BallScored(Ball ball, GameSides side) {
             ball.gameObject.SetActive(false);

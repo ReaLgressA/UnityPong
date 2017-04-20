@@ -82,7 +82,7 @@
         }
 
         private void SetPosition(float yPos) {
-            if(yPos > GameController.Instance.botBorder + HalfSize && yPos < GameController.Instance.topBorder - HalfSize) {
+            if(yPos > GameController.Instance.BotBorder + HalfSize && yPos < GameController.Instance.TopBorder - HalfSize) {
                 tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, yPos);
             }
         }
