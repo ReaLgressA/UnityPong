@@ -1,9 +1,4 @@
-﻿namespace Pong
-{
-    using System;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Text;
+﻿namespace Pong {
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -42,6 +37,7 @@
             }
             instance = this;
             ball = FindObjectOfType<Ball>();
+            InitializeBats();
         }
         
         private void InitializeBats() {
@@ -57,7 +53,10 @@
                 ++scoreLeft;
                 UpdateScore(textScoreLeft, scoreLeft);
             }
-            ball.Launch(Vector2.left);
+            for(int i = 0; i < bats.Length; ++i) {
+                bats[i].BallBounced();
+            }
+            ball.Launch(new Vector2(-0.9f, 0.2f));
         }
 
         private void UpdateScore(Text text, int score) {

@@ -1,4 +1,5 @@
 ﻿namespace Pong {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public class Ball : MonoBehaviour {
@@ -10,11 +11,13 @@
         public int hitCounter;
 
         public float Velocity { get { return velocity; } }
-        public float HalfRadius { get { return tr.sizeDelta.y / 2; } }
+        public float Radius { get { return tr.sizeDelta.y / 2; } }
+        public Vector2 Pos { get { return tr.anchoredPosition; } }
+        public Vector2 Dir { get { return dir; } }
 
         void Awake() {
             tr = GetComponent<RectTransform>();
-            Launch(Vector3.left);
+            Launch(new Vector3(-0.9f, 0.1f));
         }
         private RaycastHit2D[] hits = new RaycastHit2D[3];
         void Update() {
@@ -23,14 +26,16 @@
             var dist = velocity * Time.deltaTime;
             pos += dir * dist;
             tr.anchoredPosition = pos;
-            pos += dir * (dir.x > 0 ? HalfRadius : (-HalfRadius));
-            if(Physics2D.LinecastNonAlloc(oldPos, tr.position, hits) > 0) {
-                tr.position = hits[0].point;
+            //pos += dir * (dir.x > 0 ? Radius : (-Radius));
+            var vec = tr.position - oldPos;
+            if(Physics2D.CircleCastNonAlloc(oldPos, Radius, vec.normalized, hits, vec.magnitude) > 0) {
+                //tr.position = hits[0].point;
                 if(hits[0].transform.tag == "Paddle") {
-                    Bounce(hits[0].transform.GetComponent<Paddle>());
+                    var paddle = hits[0].transform.GetComponent<Paddle>();
+                    Bounce(paddle);
                 }
             } else if(Bounce()) {
-                
+                Debug.Log("Wallbounced");
             } else {
                 CheckForGoal();
             }
@@ -38,9 +43,9 @@
         }
 
         private void CheckForGoal() {
-            if(tr.anchoredPosition.x <= GameController.Instance.leftBorder + HalfRadius) {
+            if(tr.anchoredPosition.x <= GameController.Instance.leftBorder + Radius) {
                 GameController.Instance.BallScored(this, GameSides.Left);
-            } else if(tr.anchoredPosition.x >= GameController.Instance.rightBorder - HalfRadius) {
+            } else if(tr.anchoredPosition.x >= GameController.Instance.rightBorder - Radius) {
                 GameController.Instance.BallScored(this, GameSides.Right);
             }
         }
@@ -49,13 +54,13 @@
         /// Handle interception with walls
         /// </summary>
         private bool Bounce() {
-            if(tr.anchoredPosition.y + HalfRadius >= GameController.Instance.topBorder) {
-                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.topBorder - HalfRadius);
+            if(tr.anchoredPosition.y + Radius > GameController.Instance.topBorder) {
+                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.topBorder - Radius);
                 dir.y = -dir.y;
                 return true;
             }
-            if(tr.anchoredPosition.y - HalfRadius <= GameController.Instance.botBorder) {
-                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.botBorder + HalfRadius);
+            if(tr.anchoredPosition.y - Radius < GameController.Instance.botBorder) {
+                tr.anchoredPosition = new Vector2(tr.anchoredPosition.x, GameController.Instance.botBorder + Radius);
                 dir.y = -dir.y;
                 return true;
             }
@@ -63,18 +68,19 @@
         }
 
         /// <summary>
-        /// Reflect ball from Paddle
+        /// ball bounce from Paddle
         /// </summary>
         private void Bounce(Paddle paddle) {
-            float diff = Mathf.Max(paddle.YPos, tr.anchoredPosition.y) - Mathf.Min(paddle.YPos, tr.anchoredPosition.y);
-            float angle = diff / tr.sizeDelta.y / 2 * 70f + 20f;//angle in range [20; 90] from sides to center of paddle
+            float diff = Mathf.Max(paddle.YPos, Pos.y) - Mathf.Min(paddle.YPos, Pos.y);
+            float angle = (diff / paddle.HalfSize * 40f + 10f) * Mathf.Deg2Rad;//angle in range XX from sides to center of paddle
             bool xSign = paddle.IsLeftSided;
             bool ySign = dir.y > 0f;
-            dir.x = Mathf.Cos(angle * Mathf.Deg2Rad) * (xSign ? (1) : (-1));
-            dir.y = Mathf.Sin(angle * Mathf.Deg2Rad) * (ySign ? (1) : (-1));
+            dir.x = Mathf.Cos(angle) * (xSign ? (1) : (-1));
+            dir.y = Mathf.Sin(angle) * (ySign ? (1) : (-1));
             ++hitCounter;
-            tr.anchoredPosition = new Vector2(tr.anchoredPosition.x + (xSign ? (1f) : (-1f)), tr.anchoredPosition.y);
+            tr.anchoredPosition = new Vector2(Pos.x + (xSign ? (Radius ) : (-Radius )), Pos.y);
             UpdateVelocity();
+            //paddle.BallBounced();
         }
 
         private void UpdateVelocity() {
@@ -85,7 +91,7 @@
             tr.anchoredPosition = Vector2.zero;
             gameObject.SetActive(true);
             this.dir = dir;
-            hitCounter = 0;
+            hitCounter = 10;
             UpdateVelocity();
         }
     }

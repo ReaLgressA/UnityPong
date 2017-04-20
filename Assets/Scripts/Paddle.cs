@@ -1,4 +1,5 @@
 ﻿namespace Pong {
+    using System;
     using UnityEngine;
 
     public enum PaddleMoveDir {
@@ -19,16 +20,22 @@
         public PaddleMoveDir curDir = PaddleMoveDir.None;
         public PaddleColors color = PaddleColors.Undefined;
 
-        public float YPos { get { return tr.anchoredPosition.y; } }
-        public float Xpos { get { return tr.anchoredPosition.x; } }
-        public bool IsLeftSided { get { return tr.pivot.x == 0; } }
-        public float HalfSize { get { return tr.sizeDelta.y / 2; } }
+        public float YPos { get { InitRectTransform(); return tr.anchoredPosition.y; } }
+        public float Xpos { get { InitRectTransform();  return tr.anchoredPosition.x; } }
+        public bool IsLeftSided { get { InitRectTransform(); return tr.pivot.x == 0; } }
+        public float HalfSize { get { InitRectTransform(); return tr.sizeDelta.y / 2; } }
 
-        private void Awake() {
-            tr = GetComponent<RectTransform>();
+        
+        private void InitRectTransform() {
+            if(tr == null)
+                tr = GetComponent<RectTransform>();
         }
 
-        private void Update() {
+        protected virtual void Start() {
+            
+        }
+
+        protected virtual void Update() {
             switch(color) {
                 case PaddleColors.Red:
                     ControlByKeycodes(new KeyCode[] { KeyCode.W, KeyCode.S });
@@ -44,7 +51,7 @@
             MovePaddle();
         }
 
-        private void AcceleratePaddle() {
+        protected void AcceleratePaddle() {
             float paddleMod = GameController.Ball.speedModel.GetPaddleMod(GameController.Ball.hitCounter);
             if(curVelocity == 0f) {
                 curVelocity = GameController.Instance.batBasicVelocity * paddleMod;
@@ -56,7 +63,7 @@
             }
         }
 
-        private void MovePaddle() {
+        protected void MovePaddle() {
             if(curDir == PaddleMoveDir.Up) {
                 SetPosition(YPos + curVelocity * Time.deltaTime);
             } else if(curDir == PaddleMoveDir.Down) {
@@ -71,7 +78,7 @@
             } else if(Input.GetKey(codes[1])) {
                 dir = PaddleMoveDir.Down;
             }
-            SetBatMovement(dir);
+            SetPaddleMovement(dir);
         }
 
         private void SetPosition(float yPos) {
@@ -80,11 +87,13 @@
             }
         }
 
-        public void SetBatMovement(PaddleMoveDir dir) {
+        public void SetPaddleMovement(PaddleMoveDir dir) {
             if(dir != curDir) {
                 curVelocity = 0f;
             }
             curDir = dir;
         }
+
+        public virtual void BallBounced() { }
     }
 }
