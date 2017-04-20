@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcef41f92cc4b874a8562e7e069146ff, type: 3}
+  m_Name: DefaultBallSpeedModel
+  m_EditorClassIdentifier: 
+  model:
+  - hitCounter: 0
+    ballSpeed: 300
+    paddleSpeedMod: 1
+  - hitCounter: 3
+    ballSpeed: 450
+    paddleSpeedMod: 1
+  - hitCounter: 6
+    ballSpeed: 600
+    paddleSpeedMod: 1.5
+  - hitCounter: 10
+    ballSpeed: 800
+    paddleSpeedMod: 2
+  - hitCounter: 20
+    ballSpeed: 1000
+    paddleSpeedMod: 3
