@@ -22,6 +22,8 @@
     public class CommandConnectEstablished : Command {
         protected string sessionId;
         public override CommandCode Code { get { return CommandCode.PaddleInitialized; } }
+        public string SessionId { get { return sessionId; } }
+
         protected override void Parse(byte[] data) {
             sessionId = BitConverter.ToString(data, 4, 16);
         }
@@ -201,6 +203,15 @@
                 Debug.LogError("StartListening failed. Exception: " + ex.ToString());
                 StopListening();
             }
+        }
+
+        public UdpMessage? GetMessage() {
+            if(messagesIn.Count == 0) {
+                return null;
+            }
+            UdpMessage msg = messagesIn.First.Value;
+            messagesIn.RemoveFirst();
+            return msg;
         }
 
         private void Recv(IAsyncResult res) {
