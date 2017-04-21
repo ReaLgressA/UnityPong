@@ -28,9 +28,9 @@
         void Update() {
             if(spawnPaddle != null) {
                 if(spawnPaddle.IsLeftSided) {
-                    tr.anchoredPosition = new Vector2(GameController.Instance.leftBorder + Radius * 2, spawnPaddle.YPos);
+                    tr.anchoredPosition = new Vector2(GameController.Instance.leftBorder + Radius * 4, spawnPaddle.YPos);
                 } else {
-                    tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 2, spawnPaddle.YPos);
+                    tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 4, spawnPaddle.YPos);
                 }
 
                 if(Input.GetKeyDown(KeyCode.Space)) {
@@ -114,10 +114,9 @@
         }
 
         public void Launch(Vector2 dir) {
-            tr.anchoredPosition = Vector2.zero;
             gameObject.SetActive(true);
             this.dir = dir;
-            hitCounter = 10;
+            hitCounter = 0;
             UpdateVelocity();
         }
     }

@@ -1,4 +1,5 @@
 ﻿namespace Pong {
+    using Pong.Network;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -52,11 +53,26 @@
             if(side == GameSides.Left) {
                 ++scoreRight;
                 UpdateScore(textScoreRight, scoreRight);
+                if(paddleRed.IsLeftSided) {
+                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
+                } else {
+                    GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                }
             } else {
                 ++scoreLeft;
                 UpdateScore(textScoreLeft, scoreLeft);
+                if(!paddleRed.IsLeftSided) {
+                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
+                } else {
+                    GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                }
+                GameController.Ball.Spawn(GameController.Instance.paddleRed);
             }
-            ball.Launch(new Vector2(-0.9f, 0.2f));
+            
         }
 
         private void UpdateScore(Text text, int score) {
