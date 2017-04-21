@@ -54,7 +54,9 @@
             if(Input.GetKeyDown(KeyCode.Escape)) {
 
             }
-            textStatus.text = NetworkController.Instance.LanBC.strMessage;
+            if(NetworkController.Instance.LanBC != null) {
+                textStatus.text = NetworkController.Instance.LanBC.strMessage;
+            }
         }
 
         public void Singleplayer() {
