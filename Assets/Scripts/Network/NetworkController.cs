@@ -82,6 +82,9 @@
                 case CommandCode.PaddleMove:
                     PaddleMoved(msg.cmd as CommandPaddleMove);
                     return true;
+                case CommandCode.BallLaunch:
+                    BallLaunched(msg.cmd as CommandBallLaunch);
+                    return true;
             }
             return false;
         }
@@ -125,9 +128,6 @@
                     break;
                 case CommandCode.BallSpawn:
                     BallSpawned(msg.cmd as CommandBallSpawn);
-                    break;
-                case CommandCode.BallLaunch:
-                    BallLaunched(msg.cmd as CommandBallLaunch);
                     break;
                 case CommandCode.BallUpdate:
                     BallUpdated(msg.cmd as CommandBallUpdate);
