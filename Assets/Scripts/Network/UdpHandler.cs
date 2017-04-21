@@ -137,15 +137,20 @@
         public override CommandCode Code { get { return CommandCode.BallLaunch; } }
         protected float dirX;
         protected float dirY;
+        protected float posX;
+        protected float posY;
 
         public Vector2 Dir { get { return new Vector2(dirX, dirY); } }
+        public Vector2 Pos { get { return new Vector2(posX, posY); } }
 
         public override byte[] GetBytes(string sessionId) {
-            byte[] bytes = new byte[28];
+            byte[] bytes = new byte[36];
             Array.Copy(BitConverter.GetBytes((Int32)Code), 0, bytes, 0, 4);
             Array.Copy(Encoding.ASCII.GetBytes(sessionId), 0, bytes, 4, Command.SessionIdLength);
             Array.Copy(BitConverter.GetBytes(dirX), 0, bytes, 20, sizeof(float));
             Array.Copy(BitConverter.GetBytes(dirY), 0, bytes, 24, sizeof(float));
+            Array.Copy(BitConverter.GetBytes(posX), 0, bytes, 28, sizeof(float));
+            Array.Copy(BitConverter.GetBytes(posY), 0, bytes, 32, sizeof(float));
             return bytes;
         }
 
@@ -177,8 +182,8 @@
             Array.Copy(Encoding.ASCII.GetBytes(sessionId), 0, bytes, 4, Command.SessionIdLength);
             Array.Copy(BitConverter.GetBytes(dirX), 0, bytes, 20, sizeof(float));
             Array.Copy(BitConverter.GetBytes(dirY), 0, bytes, 24, sizeof(float));
-            Array.Copy(BitConverter.GetBytes(posX), 0, bytes, 20, sizeof(float));
-            Array.Copy(BitConverter.GetBytes(posY), 0, bytes, 24, sizeof(float));
+            Array.Copy(BitConverter.GetBytes(posX), 0, bytes, 28, sizeof(float));
+            Array.Copy(BitConverter.GetBytes(posY), 0, bytes, 32, sizeof(float));
             return bytes;
         }
 

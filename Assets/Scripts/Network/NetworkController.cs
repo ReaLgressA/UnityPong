@@ -108,7 +108,7 @@
         }
 
         private void BallLaunched(CommandBallLaunch cmd) {
-            GameController.Ball.Launch(cmd.Dir);
+            GameController.Ball.Launch(cmd.Dir, cmd.Pos);
         }
 
         private void BallUpdated(CommandBallUpdate cmd) {
