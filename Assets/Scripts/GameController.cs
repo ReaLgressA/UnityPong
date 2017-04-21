@@ -53,24 +53,27 @@
             if(side == GameSides.Left) {
                 ++scoreRight;
                 UpdateScore(textScoreRight, scoreRight);
-                if(paddleRed.IsLeftSided) {
-                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
-                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
-                } else {
-                    GameController.Ball.Spawn(GameController.Instance.paddleBlue);
-                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server) {
+                    if(paddleRed.IsLeftSided) {
+                        GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                        NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
+                    } else {
+                        GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+                        NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                    }
                 }
             } else {
                 ++scoreLeft;
                 UpdateScore(textScoreLeft, scoreLeft);
-                if(!paddleRed.IsLeftSided) {
-                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
-                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
-                } else {
-                    GameController.Ball.Spawn(GameController.Instance.paddleBlue);
-                    NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server) {
+                    if(!paddleRed.IsLeftSided) {
+                        GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                        NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleRed.Id));
+                    } else {
+                        GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+                        NetworkController.Instance.SendUdpCommand(new CommandBallSpawn(GameController.Instance.paddleBlue.Id));
+                    }
                 }
-                GameController.Ball.Spawn(GameController.Instance.paddleRed);
             }
             
         }
