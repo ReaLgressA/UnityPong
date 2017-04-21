@@ -39,9 +39,9 @@
                     bool ySign = Velocity > 0f;
                     dir.x = Mathf.Cos(angle) * (xSign ? (1) : (-1));
                     dir.y = Mathf.Sin(angle) * (ySign ? (1) : (-1));
-                    Launch(dir);
+                    Launch(dir, tr.anchoredPosition);
                     spawnPaddle = null;
-                    NetworkController.Instance.SendUdpCommand(new CommandBallLaunch(dir));
+                    NetworkController.Instance.SendUdpCommand(new CommandBallLaunch(dir, tr.anchoredPosition));
                 }
                 return;
             }

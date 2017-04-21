@@ -160,9 +160,11 @@
         }
 
         public CommandBallLaunch() { }
-        public CommandBallLaunch(Vector2 dir) {
+        public CommandBallLaunch(Vector2 dir, Vector2 pos) {
             this.dirX = dir.x;
             this.dirY = dir.y;
+            this.posX = pos.x;
+            this.posY = pos.y;
         }
     }
 
