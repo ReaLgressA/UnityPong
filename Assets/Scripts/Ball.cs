@@ -40,8 +40,8 @@
                     dir.x = Mathf.Cos(angle) * (xSign ? (1) : (-1));
                     dir.y = Mathf.Sin(angle) * (ySign ? (1) : (-1));
                     Launch(dir, tr.anchoredPosition);
-                    spawnPaddle = null;
                     NetworkController.Instance.SendUdpCommand(new CommandBallLaunch(dir, tr.anchoredPosition));
+                    spawnPaddle = null;
                 }
                 return;
             }
@@ -53,10 +53,10 @@
                 tr.anchoredPosition = pos;
                 var vec = tr.position - oldPos;
                 if(Physics2D.CircleCastNonAlloc(oldPos, Radius, vec.normalized, hits, vec.magnitude) > 0) {
-                if(hits[0].transform.tag == "Paddle") {
-                    var paddle = hits[0].transform.GetComponent<Paddle>();
-                    Bounce(paddle);
-                }
+                    if(hits[0].transform.tag == "Paddle") {
+                        var paddle = hits[0].transform.GetComponent<Paddle>();
+                        Bounce(paddle);
+                    }
                 } else if(!Bounce()) {
                     CheckForGoal();
                 }
@@ -70,6 +70,9 @@
         }
 
         private void CheckForGoal() {
+            if(NetworkController.Instance.Role != NetworkController.PlayerRole.Server) {
+                return;
+            }
             if(tr.anchoredPosition.x <= GameController.Instance.leftBorder + Radius) {
                 GameController.Instance.BallScored(this, GameSides.Left);
             } else if(tr.anchoredPosition.x >= GameController.Instance.rightBorder - Radius) {
