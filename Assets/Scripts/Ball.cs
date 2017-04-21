@@ -21,6 +21,7 @@
         }
 
         public void Spawn(Paddle paddle) {
+            gameObject.SetActive(true);
             this.spawnPaddle = paddle;
         }
 
