@@ -1,4 +1,5 @@
 ﻿namespace Pong {
+    using Pong.Network;
     using System;
     using UnityEngine;
 
@@ -77,6 +78,7 @@
             } else if(Input.GetKey(codes[1])) {
                 dir = PaddleMoveDir.Down;
             }
+            NetworkController.Instance.SendUdpCommand(new CommandPaddleMove(Id, dir));
             SetPaddleMovement(dir);
         }
 

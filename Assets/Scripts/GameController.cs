@@ -29,8 +29,7 @@
         public PaddleAI paddleRedAI;
         public Paddle paddleBlue;
         public PaddleAI paddleBlueAI;
-        
-        
+                
         private Ball ball;
         private int scoreLeft = 0;
         private int scoreRight = 0;
@@ -44,14 +43,10 @@
             }
             instance = this;
             ball = FindObjectOfType<Ball>();
-            //InitializeBats();
             topBorder = gameCanvas.GetComponent<RectTransform>().sizeDelta.y / 2 - ball.Radius * 2;
             botBorder = -topBorder;
         }
         
-        
-
-
         public void BallScored(Ball ball, GameSides side) {
             ball.gameObject.SetActive(false);
             if(side == GameSides.Left) {
@@ -67,26 +62,5 @@
         private void UpdateScore(Text text, int score) {
             text.text = score.ToString();
         }
-        
-        //void Start() {
-        //    udp = new UdpListener(2222);
-        //    udp.StartListening();
-
-        //}
-
-        //void Update() {
-        //    if(Input.GetKeyDown(KeyCode.Space)) {
-        //        IPAddress multicastaddress = IPAddress.Parse("239.0.0.222");
-        //        client = new UdpClient();
-        //        client.JoinMulticastGroup(multicastaddress);
-        //        IPEndPoint remoteep = new IPEndPoint(multicastaddress, 2222);
-        //        Byte[] buffer = null;
-        //        for(int i = 0; i <= 8000; i++) {
-        //            buffer = Encoding.Unicode.GetBytes(i.ToString());
-        //            client.Send(buffer, buffer.Length, remoteep);
-        //        }
-        //        //udp.StopListening();
-        //    }
-        //}
     }
 }

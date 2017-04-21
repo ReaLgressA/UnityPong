@@ -7,7 +7,7 @@
             Server,
             Client
         }
-
+        private static NetworkController instance = null;
         public int portBroadcast = 1500;
         public int portGameServer = 1555;
         public int portGameClient = 1556;
@@ -15,7 +15,20 @@
         protected Pong.Network.UdpHandler udpHandler;
         protected PlayerRole role;
 
+        public static NetworkController Instance { get { return instance; } }
+
+        private IPEndPoint destAddr;
+
+        public void SendUdpCommand(Command cmd) {
+            udpHandler.SendMessage(new UdpMessage(destAddr, cmd, udpHandler));
+        }
+
         void Start() {
+            if(instance != null) {
+                Destroy(gameObject);
+                return;
+            }
+            instance = this;
             lanBc = GetComponent<LanBroadcaster>();
             lanBc.StartSearchBroadCasting(ConnectToServer, StartServer, portBroadcast);
         }
@@ -35,9 +48,9 @@
             lanBc.StopBroadcasting();
             udpHandler = new Pong.Network.UdpHandler(portGameClient);
             udpHandler.StartListening();
-            var endpoint = new IPEndPoint(IPAddress.Parse(ip), portGameServer);
+            destAddr = new IPEndPoint(IPAddress.Parse(ip), portGameServer);
             var command = new Pong.Network.CommandConnect();
-            udpHandler.SendMessage(new Pong.Network.UdpMessage(endpoint, command));
+            udpHandler.SendMessage(new Pong.Network.UdpMessage(destAddr, command));
             role = PlayerRole.Client;
         }
 
@@ -47,12 +60,29 @@
                 if(!msg.HasValue) {
                     break;
                 }
-                if(role == PlayerRole.Server) {
+                if(!ProcessGeneralMessage(msg.Value) && role == PlayerRole.Server) {
                     ProcessServerMessage(msg.Value);
                 } else {
                     ProcessClientMessage(msg.Value);
                 }
             }
+        }
+
+        private void PaddleMoved(CommandPaddleMove cmd) {
+            if(GameController.Instance.paddleBlue.Id == cmd.Id) {
+                GameController.Instance.paddleBlue.SetPaddleMovement(cmd.Dir);
+            } else if(GameController.Instance.paddleRed.Id == cmd.Id) {
+                GameController.Instance.paddleRed.SetPaddleMovement(cmd.Dir);
+            }
+        }
+
+        private bool ProcessGeneralMessage(UdpMessage msg) {
+            switch(msg.Code) {
+                case CommandCode.PaddleMove:
+                    PaddleMoved(msg.cmd as CommandPaddleMove);
+                    return true;
+            }
+            return false;
         }
 
         private void ConnectionEstablished(CommandConnectEstablished cmd) {
@@ -80,17 +110,17 @@
             }
         }
 
-        private IPEndPoint clientAddr;
+        
         private void ProcessServerMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.Connect:
                     Debug.Log("Incoming connection: " + msg.Remote.Address.ToString());
-                    clientAddr = msg.Remote;
+                    destAddr = msg.Remote;
                     msg.Respond(new UdpMessage(msg.Remote, new CommandConnectEstablished(udpHandler.SessionId)));
                     GameController.Instance.paddleRed.InitializePaddle(0, PaddleColors.Red, true, true);
-                    udpHandler.SendMessage(new UdpMessage(clientAddr, new CommandPaddleInitialized(0, PaddleColors.Red, true, false)));
+                    udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(0, PaddleColors.Red, true, false)));
                     GameController.Instance.paddleBlue.InitializePaddle(1, PaddleColors.Blue, false, false);
-                    udpHandler.SendMessage(new UdpMessage(clientAddr, new CommandPaddleInitialized(1, PaddleColors.Blue, false, true)));
+                    udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(1, PaddleColors.Blue, false, true)));
 
                     break;
             }
