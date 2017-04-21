@@ -847,6 +847,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1164533421903990, guid: b64129a96ca673b4e8847d68ac92b8bb, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b64129a96ca673b4e8847d68ac92b8bb, type: 2}
   m_IsPrefabParent: 0
@@ -1977,12 +1981,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4609aa9cbd58b49a15d20c8e9796ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imgBack: {fileID: 0}
-  btnSingle: {fileID: 0}
-  btnMulti: {fileID: 0}
-  btnHotseat: {fileID: 0}
-  btnAI: {fileID: 0}
-  brnQuit: {fileID: 0}
+  imgBack: {fileID: 1988204269}
+  btnSingle: {fileID: 1831063392}
+  btnMulti: {fileID: 1950503796}
+  btnHotseat: {fileID: 405039959}
+  btnAI: {fileID: 813245317}
+  brnQuit: {fileID: 389955201}
 --- !u!4 &1820475400
 Transform:
   m_ObjectHideFlags: 0
@@ -2642,6 +2646,10 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1851935739035646, guid: 778fc11aa4214f24cb2c238f0f4e6214, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 778fc11aa4214f24cb2c238f0f4e6214, type: 2}

@@ -23,6 +23,20 @@
         public void Spawn(Paddle paddle) {
             gameObject.SetActive(true);
             this.spawnPaddle = paddle;
+            if(paddle as PaddleAI != null) {
+                if(spawnPaddle.IsLeftSided) {
+                    tr.anchoredPosition = new Vector2(GameController.Instance.leftBorder + Radius * 4, spawnPaddle.YPos);
+                } else {
+                    tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 4, spawnPaddle.YPos);
+                }
+                float angle = Random.Range(40f,50f) * Mathf.Deg2Rad;//angle in range XX from sides to center of paddle
+                bool xSign = spawnPaddle.IsLeftSided;
+                bool ySign = Velocity > 0f;
+                dir.x = Mathf.Cos(angle) * (xSign ? (1) : (-1));
+                dir.y = Mathf.Sin(angle) * (ySign ? (1) : (-1));
+                Launch(dir, tr.anchoredPosition);
+                spawnPaddle = null;
+            }
         }
 
         private RaycastHit2D[] hits = new RaycastHit2D[3];
@@ -46,7 +60,7 @@
                 }
                 return;
             }
-            if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server && dir != Vector2.zero) {
+            if(GameController.Instance.GameType != GameType.Multi || NetworkController.Instance.Role == NetworkController.PlayerRole.Server && dir != Vector2.zero) {
                 var oldPos = tr.position;
                 var pos = tr.anchoredPosition;
                 var dist = velocity * Time.deltaTime;
@@ -122,7 +136,7 @@
             tr.anchoredPosition = pos;
             gameObject.SetActive(true);
             this.dir = dir;
-            hitCounter = 1;
+            hitCounter = 5;
             UpdateVelocity();
         }
     }

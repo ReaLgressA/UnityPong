@@ -63,16 +63,21 @@
         }
 
         public void Multiplayer() {
-
+            HideMenuScreen();
+            HideBackground();
             NetworkController.Instance.StartSearchForGame();
         }
 
         public void Hotseat() {
-
+            HideMenuScreen();
+            HideBackground();
+            GameController.Instance.StartHotseat();
         }
 
         public void AIvsAI() {
-
+            HideMenuScreen();
+            HideBackground();
+            GameController.Instance.StartAIvsAI();
         }
 
         public void Exit() {

@@ -21,7 +21,9 @@
         private IPEndPoint destAddr;
 
         public void SendUdpCommand(Command cmd) {
-            udpHandler.SendMessage(new UdpMessage(destAddr, cmd, udpHandler));
+            if(udpHandler != null) {
+                udpHandler.SendMessage(new UdpMessage(destAddr, cmd, udpHandler));
+            }
         }
 
         private void Awake() {
@@ -114,9 +116,9 @@
 
         private void BallSpawned(CommandBallSpawn cmd) {
             if(cmd.PaddleId == GameController.Instance.paddleRed.Id) {
-                GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                GameController.Ball.Spawn(GameController.Instance.PaddleRed);
             } else if(cmd.PaddleId == GameController.Instance.paddleBlue.Id) {
-                GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+                GameController.Ball.Spawn(GameController.Instance.PaddleBlue);
             }
         }
 
@@ -155,7 +157,7 @@
                     udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(0, PaddleColors.Red, true, false)));
                     GameController.Instance.paddleBlue.InitializePaddle(1, PaddleColors.Blue, false, false);
                     udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(1, PaddleColors.Blue, false, true)));
-                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                    GameController.Ball.Spawn(GameController.Instance.PaddleRed);
                     udpHandler.SendMessage(new UdpMessage(destAddr, new CommandBallSpawn(0)));
                     break;
             }

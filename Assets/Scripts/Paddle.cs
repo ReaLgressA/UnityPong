@@ -44,6 +44,7 @@
         }
 
         public void InitializePaddle(int id, PaddleColors color, bool isLeftSide, bool isControllable) {
+            gameObject.SetActive(true);
             this.id = id;
             this.color = color;
             InitRectTransform();
