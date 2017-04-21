@@ -1,6 +1,7 @@
 ﻿namespace Pong {
     using Pong.Network;
     using UnityEngine;
+    using UnityEngine.SceneManagement;
     using UnityEngine.UI;
 
     public class MasterController : MonoBehaviour {
@@ -35,6 +36,7 @@
         }
 
         private void ShowMenuScreen() {
+            btnMulti.GetComponentInChildren<Text>().text = "Multiplayer";
             btnSingle.gameObject.SetActive(true);
             btnMulti.gameObject.SetActive(true);
             btnHotseat.gameObject.SetActive(true);
@@ -55,7 +57,7 @@
 
         private void Update() {
             if(Input.GetKeyDown(KeyCode.Escape)) {
-
+                SceneManager.LoadScene(0); //reload
             }
             if(NetworkController.Instance.LanBC != null) {
                 textStatus.text = NetworkController.Instance.LanBC.strMessage;
@@ -68,9 +70,23 @@
             GameController.Instance.StartSingleplayer();
         }
 
+
         public void Multiplayer() {
-            
-            NetworkController.Instance.StartSearchForGame();
+            var multiText = btnMulti.GetComponentInChildren<Text>();
+            if(multiText.text == "Multiplayer") {
+                btnSingle.interactable = false;
+                btnHotseat.interactable = false;
+                btnAI.interactable = false;
+                btnMulti.GetComponentInChildren<Text>().text = "Cancel";
+                NetworkController.Instance.StartSearchForGame();
+            } else {
+                btnSingle.interactable = true;
+                btnHotseat.interactable = true;
+                btnAI.interactable = true;
+                multiText.text = "Multiplayer";
+                NetworkController.Instance.StopServer();
+                NetworkController.Instance.LanBC.StopBroadcasting();
+            }
         }
 
         public void MultiplayerGameStarted() {

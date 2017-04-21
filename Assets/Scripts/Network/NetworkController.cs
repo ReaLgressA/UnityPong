@@ -1,6 +1,6 @@
 ﻿namespace Pong.Network {
-    using UnityEngine;
     using System.Net;
+    using UnityEngine;
 
     public class NetworkController : MonoBehaviour {
         public enum PlayerRole {
@@ -79,6 +79,12 @@
                 GameController.Instance.paddleBlue.SetPaddleMovement(cmd.Dir);
             } else if(GameController.Instance.paddleRed.Id == cmd.Id) {
                 GameController.Instance.paddleRed.SetPaddleMovement(cmd.Dir);
+            }
+        }
+
+        public void StopServer() {
+            if(udpHandler != null) {
+                udpHandler.StopListening();
             }
         }
 
