@@ -4,26 +4,26 @@
     using UnityEngine.UI;
 
     public class MasterController : MonoBehaviour {
-        public enum MenuState {
-            NotInMenu = 0,
-            Pause = 1,
-            MainMenu = 2,
-            Searching = 3
-        }
-
+        private static MasterController instance;
         public Image imgBack;
         public Button btnSingle;
         public Button btnMulti;
         public Button btnHotseat;
         public Button btnAI;
         public Button brnQuit;
+        public Text textStatus;
 
-        protected MenuState state;
+        public static MasterController Instance { get { return instance; } }
 
         void Awake() {
+            if(instance != null) {
+                Destroy(gameObject);
+                return;
+            }
+            instance = this;
+
             ShowBackground();
             ShowMenuScreen();
-            state = MenuState.MainMenu;
         }
 
         private void ShowBackground() {
@@ -53,7 +53,8 @@
         private void Update() {
             if(Input.GetKeyDown(KeyCode.Escape)) {
 
-            }    
+            }
+            textStatus.text = NetworkController.Instance.LanBC.strMessage;
         }
 
         public void Singleplayer() {
@@ -63,9 +64,13 @@
         }
 
         public void Multiplayer() {
+            
+            NetworkController.Instance.StartSearchForGame();
+        }
+
+        public void MultiplayerGameStarted() {
             HideMenuScreen();
             HideBackground();
-            NetworkController.Instance.StartSearchForGame();
         }
 
         public void Hotseat() {

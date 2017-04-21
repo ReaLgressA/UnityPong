@@ -1438,7 +1438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1368166794}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1940,11 +1940,11 @@ MonoBehaviour:
     m_FontStyle: 2
     m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 157
+    m_MaxSize: 52
     m_Alignment: 4
     m_AlignByGeometry: 1
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -1987,6 +1987,7 @@ MonoBehaviour:
   btnHotseat: {fileID: 405039959}
   btnAI: {fileID: 813245317}
   brnQuit: {fileID: 389955201}
+  textStatus: {fileID: 1774378737}
 --- !u!4 &1820475400
 Transform:
   m_ObjectHideFlags: 0

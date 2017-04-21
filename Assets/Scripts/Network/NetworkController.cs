@@ -17,7 +17,7 @@
 
         public static NetworkController Instance { get { return instance; } }
         public PlayerRole Role { get { return role; } }
-
+        public LanBroadcaster LanBC { get { return lanBc; } }
         private IPEndPoint destAddr;
 
         public void SendUdpCommand(Command cmd) {
@@ -104,6 +104,7 @@
         private void ConnectionEstablished(CommandConnectEstablished cmd) {
             Debug.Log("Connected to server! SessionID: " + cmd.SessionId);
             udpHandler.SessionId = cmd.SessionId;
+            MasterController.Instance.MultiplayerGameStarted();
         }
 
         private void PaddleInitialized(CommandPaddleInitialized cmd) {
@@ -150,6 +151,7 @@
         private void ProcessServerMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.Connect:
+                    MasterController.Instance.MultiplayerGameStarted();
                     Debug.Log("Incoming connection: " + msg.Remote.Address.ToString());
                     destAddr = msg.Remote;
                     msg.Respond(new UdpMessage(msg.Remote, new CommandConnectEstablished(udpHandler.SessionId)));
