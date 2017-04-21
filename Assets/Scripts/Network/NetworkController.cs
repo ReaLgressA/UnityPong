@@ -12,7 +12,7 @@
         public int portGameServer = 1555;
         public int portGameClient = 1556;
         protected LanBroadcaster lanBc;
-        protected Pong.Network.UdpHandler udpHandler;
+        protected UdpHandler udpHandler;
         protected PlayerRole role;
 
         public static NetworkController Instance { get { return instance; } }
@@ -38,7 +38,7 @@
             
             lanBc.StopBroadcasting();
             lanBc.StartAnnounceBroadcasting();
-            udpHandler = new Pong.Network.UdpHandler(portGameServer);
+            udpHandler = new UdpHandler(portGameServer);
             udpHandler.StartListening();
             role = PlayerRole.Server;
             Debug.LogError("Starting Server -> " + udpHandler.SessionId);
@@ -47,11 +47,11 @@
         private void ConnectToServer(string ip) {
             Debug.LogError("Connecting to server: " + ip);
             lanBc.StopBroadcasting();
-            udpHandler = new Pong.Network.UdpHandler(portGameClient);
+            udpHandler = new UdpHandler(portGameClient);
             udpHandler.StartListening();
             destAddr = new IPEndPoint(IPAddress.Parse(ip), portGameServer);
-            var command = new Pong.Network.CommandConnect();
-            udpHandler.SendMessage(new Pong.Network.UdpMessage(destAddr, command));
+            var command = new CommandConnect();
+            udpHandler.SendMessage(new UdpMessage(destAddr, command));
             role = PlayerRole.Client;
         }
 
@@ -77,6 +77,10 @@
             }
         }
 
+        private void ScoreUpdated(CommandScoreUpdate cmd) {
+            GameController.Instance.UpdateScore(cmd.leftScore, cmd.rightScore);
+        }
+
         private bool ProcessGeneralMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.PaddleMove:
@@ -84,6 +88,9 @@
                     return true;
                 case CommandCode.BallLaunch:
                     BallLaunched(msg.cmd as CommandBallLaunch);
+                    return true;
+                case CommandCode.ScoreUpdate:
+                    ScoreUpdated(msg.cmd as CommandScoreUpdate);
                     return true;
             }
             return false;
@@ -135,7 +142,6 @@
             }
         }
 
-        
         private void ProcessServerMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.Connect:
