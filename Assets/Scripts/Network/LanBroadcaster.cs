@@ -23,7 +23,7 @@
         private float msgLifeTime = 3f;
         private float lastMsgSentTime;
         private float msgSentInterval = 1f;
-        private float searchTime = 3f;
+        private float searchTime = 2f;
         private float searchStartedTime;
         /// <summary>
         /// IP should be cached because Network.player.ipAddress cannot be accessed from any thread except the main one
@@ -165,13 +165,13 @@
 
         private void StartBroadcasting() {
             if(state != BroadcasterState.NotActive)
-                StopBroadCasting();
+                StopBroadcasting();
             udp = new UdpClient(port);
             udp.EnableBroadcast = true;
             lastMsgSentTime = Time.time;
         }
 
-        public void StopBroadCasting() {
+        public void StopBroadcasting() {
             if(state == BroadcasterState.Searching)
                 StopSearching();
             else if(state == BroadcasterState.Announcing)
@@ -187,7 +187,7 @@
             StartBroadcasting();
             StartSearching();
         }
-        public void StartAnnounceBroadCasting() {
+        public void StartAnnounceBroadcasting() {
             StartBroadcasting();
             StartAnnouncing();
         }

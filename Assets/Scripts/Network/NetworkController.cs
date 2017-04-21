@@ -14,8 +14,8 @@
 
         private void StartServer() {
             Debug.LogError("Starting Server");
-            lanBc.StopBroadCasting();
-            lanBc.StartAnnounceBroadCasting();
+            lanBc.StopBroadcasting();
+            lanBc.StartAnnounceBroadcasting();
             udpHandler = new Pong.Network.UdpHandler(portGame);
             udpHandler.StartListening();
             
@@ -23,7 +23,7 @@
 
         private void ConnectToServer(string ip) {
             Debug.LogError("Connecting to server: " + ip);
-            lanBc.StopBroadCasting();
+            lanBc.StopBroadcasting();
             udpHandler = new Pong.Network.UdpHandler(portGame);
             udpHandler.StartListening();
             udpHandler.SendMessage(new Pong.Network.UdpMessage(new IPEndPoint(IPAddress.Parse(ip), portGame), new Pong.Network.CommandConnect()));

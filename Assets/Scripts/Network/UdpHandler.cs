@@ -197,7 +197,7 @@
             public void StartListening() {
                 try {
                     udp = new UdpClient(port);
-                    udp.ExclusiveAddressUse = false;
+                    //udp.ExclusiveAddressUse = false;
                     udp.BeginReceive(Recv, null);
                     sessionId = GenerateSessionId();
                 } catch(Exception ex) {
@@ -209,7 +209,10 @@
 
             private void Recv(IAsyncResult res) {
                 try {
-                    IPEndPoint remote = new IPEndPoint(IPAddress.Any, 0);
+                    if(udp.Client == null) {
+                        return;
+                    }
+                    IPEndPoint remote = new IPEndPoint(IPAddress.Any, port);
                     byte[] bytes = udp.EndReceive(res, ref remote);
                     messagesIn.AddLast(new UdpMessage(remote, bytes));
                     Debug.Log(remote.Address.ToString() + ": " + Encoding.ASCII.GetString(bytes));
@@ -228,6 +231,9 @@
 
             private void Send(IAsyncResult res) {
                 try {
+                    if(udp.Client == null) {
+                        return;
+                    }
                     udp.EndSend(res);
                     messagesOut.RemoveFirst();
                     if(messagesOut.Count > 0) {
