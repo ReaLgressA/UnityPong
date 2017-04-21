@@ -50,7 +50,7 @@
         }
 
         private void ConnectToServer(string ip) {
-            Debug.LogError("Connecting to server: " + ip);
+            Debug.Log("Connecting to server: " + ip);
             lanBc.StopBroadcasting();
             udpHandler = new UdpHandler(portGameClient);
             udpHandler.StartListening();

@@ -60,7 +60,9 @@
                 }
                 return;
             }
-            if(GameController.Instance.GameType != GameType.Multi || NetworkController.Instance.Role == NetworkController.PlayerRole.Server && dir != Vector2.zero) {
+            bool isMultiplayer = GameController.Instance.GameType == GameType.Multi;
+
+            if((!isMultiplayer || (isMultiplayer && NetworkController.Instance.Role == NetworkController.PlayerRole.Server)) && dir != Vector2.zero) {
                 var oldPos = tr.position;
                 var pos = tr.anchoredPosition;
                 var dist = velocity * Time.deltaTime;
