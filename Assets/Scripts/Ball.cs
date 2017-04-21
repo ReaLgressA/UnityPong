@@ -60,16 +60,8 @@
                     }
                 } else if(!Bounce()) {
                     CheckForGoal();
-                } else {
-                    NetworkController.Instance.SendUdpCommand(new CommandBallUpdate(dir, pos));
                 }
-            } else {
-                var oldPos = tr.position;
-                var pos = tr.anchoredPosition;
-                var dist = velocity * Time.deltaTime;
-                pos += dir * dist;
-                tr.anchoredPosition = pos;
-                var vec = tr.position - oldPos;
+                NetworkController.Instance.SendUdpCommand(new CommandBallUpdate(dir, pos));
             }
         }
 
@@ -130,7 +122,7 @@
             tr.anchoredPosition = pos;
             gameObject.SetActive(true);
             this.dir = dir;
-            hitCounter = 0;
+            hitCounter = 10;
             UpdateVelocity();
         }
     }
