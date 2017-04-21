@@ -2,13 +2,13 @@
     using System;
     using UnityEngine;
 
-    public enum PaddleMoveDir {
+    public enum PaddleMoveDir : Int32 {
         None = 0,
         Up = 1,
         Down = -1
     }
 
-    public enum PaddleColors {
+    public enum PaddleColors : Int32 {
         Undefined = 0,
         Red,
         Blue
