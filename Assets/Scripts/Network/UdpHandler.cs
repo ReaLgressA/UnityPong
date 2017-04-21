@@ -21,7 +21,7 @@
 
     public class CommandConnectEstablished : Command {
         protected string sessionId;
-        public override CommandCode Code { get { return CommandCode.PaddleInitialized; } }
+        public override CommandCode Code { get { return CommandCode.ConnectEstablished; } }
         public string SessionId { get { return sessionId; } }
 
         protected override void Parse(byte[] data) {
