@@ -18,12 +18,10 @@
 
         void Awake() {
             tr = GetComponent<RectTransform>();
-            gameObject.SetActive(false);
         }
 
         public void Spawn(Paddle paddle) {
             this.spawnPaddle = paddle;
-            gameObject.SetActive(true);
         }
 
         private RaycastHit2D[] hits = new RaycastHit2D[3];
