@@ -23,7 +23,7 @@
         private float msgLifeTime = 3f;
         private float lastMsgSentTime;
         private float msgSentInterval = 1f;
-        private float searchTime = 15f;
+        private float searchTime = 3f;
         private float searchStartedTime;
         /// <summary>
         /// IP should be cached because Network.player.ipAddress cannot be accessed from any thread except the main one

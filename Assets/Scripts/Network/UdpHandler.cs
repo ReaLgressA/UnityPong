@@ -197,14 +197,14 @@
             public void StartListening() {
                 try {
                     udp = new UdpClient(port);
+                    udp.ExclusiveAddressUse = false;
+                    udp.BeginReceive(Recv, null);
+                    sessionId = GenerateSessionId();
                 } catch(Exception ex) {
                     Debug.LogError("StartListening failed. Exception: " + ex.ToString());
                 } finally {
                     StopListening();
                 }
-                udp.ExclusiveAddressUse = false;
-                udp.BeginReceive(Recv, null);
-                sessionId = GenerateSessionId();
             }
 
             private void Recv(IAsyncResult res) {
