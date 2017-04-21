@@ -1,6 +1,8 @@
 ﻿namespace Pong.Network {
     using UnityEngine;
     using System.Net;
+    using System;
+
     public class NetworkController : MonoBehaviour {
         public enum PlayerRole {
             Server,
@@ -25,7 +27,6 @@
             udpHandler = new Pong.Network.UdpHandler(portGameServer);
             udpHandler.StartListening();
             role = PlayerRole.Server;
-            
         }
 
         private void ConnectToServer(string ip) {

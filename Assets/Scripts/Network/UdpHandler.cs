@@ -1,10 +1,10 @@
 ﻿namespace Pong.Network {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
-    using System.Linq;
     using UnityEngine;
 
     public class CommandConnect : Command {
@@ -41,65 +41,65 @@
         }
     }
 
-    public class CommandPaddleInitialized : Command {
-        protected Int32 paddleId;
-        protected PaddleColors paddleColor;
-        protected bool isLeftSide;
-        protected bool isControllable;
-        public override CommandCode Code { get { return CommandCode.PaddleInitialized; } }
+    //public class CommandPaddleInitialized : Command {
+    //    protected Int32 paddleId;
+    //    protected PaddleColors paddleColor;
+    //    protected bool isLeftSide;
+    //    protected bool isControllable;
+    //    public override CommandCode Code { get { return CommandCode.PaddleInitialized; } }
 
-        public override byte[] GetBytes(string sessionId) {
-            throw new NotImplementedException();
-        }
+    //    public override byte[] GetBytes(string sessionId) {
+    //        throw new NotImplementedException();
+    //    }
 
-        protected override void Parse(byte[] data) {
-            paddleId = BitConverter.ToInt32(data, 20);
-        }
-    }
+    //    protected override void Parse(byte[] data) {
+    //        paddleId = BitConverter.ToInt32(data, 20);
+    //    }
+    //}
 
-    public class CommandPaddleMove : Command {
-        protected int paddleId;
-        protected PaddleMoveDir dir;
-        public override CommandCode Code { get { return CommandCode.PaddleMove; } }
+    //public class CommandPaddleMove : Command {
+    //    protected int paddleId;
+    //    protected PaddleMoveDir dir;
+    //    public override CommandCode Code { get { return CommandCode.PaddleMove; } }
 
-        public override byte[] GetBytes(string sessionId) {
-            throw new NotImplementedException();
-        }
+    //    public override byte[] GetBytes(string sessionId) {
+    //        throw new NotImplementedException();
+    //    }
 
-        protected override void Parse(byte[] data) {
+    //    protected override void Parse(byte[] data) {
 
-        }
-    }
+    //    }
+    //}
 
-    public class CommandBallLaunch : Command {
-        public override CommandCode Code { get { return CommandCode.BallLaunch; } }
+    //public class CommandBallLaunch : Command {
+    //    public override CommandCode Code { get { return CommandCode.BallLaunch; } }
 
-        public override byte[] GetBytes(string sessionId) {
-            throw new NotImplementedException();
-        }
+    //    public override byte[] GetBytes(string sessionId) {
+    //        throw new NotImplementedException();
+    //    }
 
-        protected override void Parse(byte[] data) { }
-    }
+    //    protected override void Parse(byte[] data) { }
+    //}
 
-    public class CommandScoreUpdate : Command {
-        public override CommandCode Code { get { return CommandCode.ScoreUpdate; } }
+    //public class CommandScoreUpdate : Command {
+    //    public override CommandCode Code { get { return CommandCode.ScoreUpdate; } }
 
-        public override byte[] GetBytes(string sessionId) {
-            throw new NotImplementedException();
-        }
+    //    public override byte[] GetBytes(string sessionId) {
+    //        throw new NotImplementedException();
+    //    }
 
-        protected override void Parse(byte[] data) { }
-    }
+    //    protected override void Parse(byte[] data) { }
+    //}
 
-    public class CommandGameEnd : Command {
-        public override CommandCode Code { get { return CommandCode.GameEnd; } }
+    //public class CommandGameEnd : Command {
+    //    public override CommandCode Code { get { return CommandCode.GameEnd; } }
 
-        public override byte[] GetBytes(string sessionId) {
-            throw new NotImplementedException();
-        }
+    //    public override byte[] GetBytes(string sessionId) {
+    //        throw new NotImplementedException();
+    //    }
 
-        protected override void Parse(byte[] data) { }
-    }
+    //    protected override void Parse(byte[] data) { }
+    //}
 
     public abstract class Command {
         public const int SessionIdLength = 16;
@@ -113,8 +113,8 @@
                 return null;
             }
             CommandCode code = (CommandCode)BitConverter.ToInt32(data, 0);
-            var type = Type.GetType(string.Format("Command{0}", code.ToString()));
-            if(data.Length <= 0 || data.Length > (int)CommandCode.GameEnd) {
+            var type = Type.GetType(string.Format("Pong.Network.Command{0}", code.ToString()));
+            if(type != null) {
                 Command cmd = Activator.CreateInstance(type) as Command;
                 cmd.Parse(data);
                 return cmd;
@@ -125,7 +125,7 @@
 
         public abstract byte[] GetBytes(String sessionId);
     }
-
+    
     public enum CommandCode : int {
         Undefined = 0,
         Connect = 1,
@@ -137,7 +137,8 @@
         GameEnd = 7
     }
 
-    /// <summary
+
+    /// <summary>
     /// First 4 bytes of the message - is a command code
     /// If the command code is not CONNECT, next 'Command.SessionIdLength' bytes is client session ID. 
     /// Messages with innaproriate ID will be ignored
@@ -221,7 +222,8 @@
                 }
                 IPEndPoint remote = new IPEndPoint(IPAddress.Any, port);
                 byte[] bytes = udp.EndReceive(res, ref remote);
-                messagesIn.AddLast(new UdpMessage(remote, bytes));
+                var msg = new UdpMessage(remote, bytes, this);
+                messagesIn.AddLast(msg);
                 Debug.Log(remote.Address.ToString() + ": " + Encoding.ASCII.GetString(bytes));
                 udp.BeginReceive(Recv, null);
             } catch(Exception ex) {
