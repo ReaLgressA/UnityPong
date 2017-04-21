@@ -45,6 +45,7 @@
         public void InitializePaddle(int id, PaddleColors color, bool isLeftSide, bool isControllable) {
             this.id = id;
             this.color = color;
+            InitRectTransform();
             tr.pivot = new Vector2(isLeftSide ? 0f : 1f, 0.5f);
             this.isControllable = isControllable;
         }
