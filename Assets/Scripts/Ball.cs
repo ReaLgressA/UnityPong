@@ -34,7 +34,7 @@
                     tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 4, spawnPaddle.YPos);
                 }
 
-                if(Input.GetKeyDown(KeyCode.Space)) {
+                if(spawnPaddle.IsControllable && Input.GetKeyDown(KeyCode.Space)) {
                     float angle = 45f * Mathf.Deg2Rad;//angle in range XX from sides to center of paddle
                     bool xSign = spawnPaddle.IsLeftSided;
                     bool ySign = Velocity > 0f;
@@ -60,8 +60,16 @@
                     }
                 } else if(!Bounce()) {
                     CheckForGoal();
+                } else {
+                    NetworkController.Instance.SendUdpCommand(new CommandBallUpdate(dir, pos));
                 }
-                NetworkController.Instance.SendUdpCommand(new CommandBallUpdate(dir, pos));
+            } else {
+                var oldPos = tr.position;
+                var pos = tr.anchoredPosition;
+                var dist = velocity * Time.deltaTime;
+                pos += dir * dist;
+                tr.anchoredPosition = pos;
+                var vec = tr.position - oldPos;
             }
         }
 
