@@ -1,10 +1,12 @@
 ﻿namespace Pong {
+    using Pong.Network;
     using UnityEngine;
 
     public class Ball : MonoBehaviour {
         protected RectTransform tr;
         protected Vector2 dir;
         protected float velocity;
+        protected Paddle spawnPaddle = null;
         public BallModel speedModel;
 
         public int hitCounter;
@@ -16,25 +18,57 @@
 
         void Awake() {
             tr = GetComponent<RectTransform>();
-            Launch(new Vector3(-0.9f, 0.1f));
+            gameObject.SetActive(false);
+        }
+
+        public void Spawn(Paddle paddle) {
+            this.spawnPaddle = paddle;
+            gameObject.SetActive(true);
         }
 
         private RaycastHit2D[] hits = new RaycastHit2D[3];
         void Update() {
-            var oldPos = tr.position;
-            var pos = tr.anchoredPosition;
-            var dist = velocity * Time.deltaTime;
-            pos += dir * dist;
-            tr.anchoredPosition = pos;
-            var vec = tr.position - oldPos;
-            if(Physics2D.CircleCastNonAlloc(oldPos, Radius, vec.normalized, hits, vec.magnitude) > 0) {
+            if(spawnPaddle != null) {
+                if(spawnPaddle.IsLeftSided) {
+                    tr.anchoredPosition = new Vector2(GameController.Instance.leftBorder + Radius * 2, spawnPaddle.YPos);
+                } else {
+                    tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 2, spawnPaddle.YPos);
+                }
+
+                if(Input.GetKeyDown(KeyCode.Space)) {
+                    float angle = 45f * Mathf.Deg2Rad;//angle in range XX from sides to center of paddle
+                    bool xSign = spawnPaddle.IsLeftSided;
+                    bool ySign = Velocity > 0f;
+                    dir.x = Mathf.Cos(angle) * (xSign ? (1) : (-1));
+                    dir.y = Mathf.Sin(angle) * (ySign ? (1) : (-1));
+                    Launch(dir);
+                    spawnPaddle = null;
+                    NetworkController.Instance.SendUdpCommand(new CommandBallLaunch(dir));
+                }
+                return;
+            }
+            if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server) {
+                var oldPos = tr.position;
+                var pos = tr.anchoredPosition;
+                var dist = velocity * Time.deltaTime;
+                pos += dir * dist;
+                tr.anchoredPosition = pos;
+                var vec = tr.position - oldPos;
+                if(Physics2D.CircleCastNonAlloc(oldPos, Radius, vec.normalized, hits, vec.magnitude) > 0) {
                 if(hits[0].transform.tag == "Paddle") {
                     var paddle = hits[0].transform.GetComponent<Paddle>();
                     Bounce(paddle);
                 }
-            } else if(!Bounce()) {
-                CheckForGoal();
+                } else if(!Bounce()) {
+                    CheckForGoal();
+                }
+                NetworkController.Instance.SendUdpCommand(new CommandBallUpdate(dir, pos));
             }
+        }
+
+        public void SetBallPosition(Vector2 pos, Vector2 dir) {
+            this.dir = dir;
+            this.tr.anchoredPosition = pos;
         }
 
         private void CheckForGoal() {

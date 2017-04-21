@@ -16,6 +16,7 @@
         protected PlayerRole role;
 
         public static NetworkController Instance { get { return instance; } }
+        public PlayerRole Role { get { return role; } }
 
         private IPEndPoint destAddr;
 
@@ -98,6 +99,21 @@
             }
         }
 
+        private void BallSpawned(CommandBallSpawn cmd) {
+            if(cmd.PaddleId == GameController.Instance.paddleRed.Id) {
+                GameController.Ball.Spawn(GameController.Instance.paddleRed);
+            } else if(cmd.PaddleId == GameController.Instance.paddleBlue.Id) {
+                GameController.Ball.Spawn(GameController.Instance.paddleBlue);
+            }
+        }
+
+        private void BallLaunched(CommandBallLaunch cmd) {
+            GameController.Ball.Launch(cmd.Dir);
+        }
+
+        private void BallUpdated(CommandBallUpdate cmd) {
+            GameController.Ball.SetBallPosition(cmd.Pos, cmd.Dir);
+        }
 
         private void ProcessClientMessage(UdpMessage msg) {
             switch(msg.Code) {
@@ -106,6 +122,15 @@
                     break;
                 case CommandCode.PaddleInitialized:
                     PaddleInitialized(msg.cmd as CommandPaddleInitialized);
+                    break;
+                case CommandCode.BallSpawn:
+                    BallSpawned(msg.cmd as CommandBallSpawn);
+                    break;
+                case CommandCode.BallLaunch:
+                    BallLaunched(msg.cmd as CommandBallLaunch);
+                    break;
+                case CommandCode.BallUpdate:
+                    BallUpdated(msg.cmd as CommandBallUpdate);
                     break;
             }
         }
@@ -121,7 +146,8 @@
                     udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(0, PaddleColors.Red, true, false)));
                     GameController.Instance.paddleBlue.InitializePaddle(1, PaddleColors.Blue, false, false);
                     udpHandler.SendMessage(new UdpMessage(destAddr, new CommandPaddleInitialized(1, PaddleColors.Blue, false, true)));
-
+                    GameController.Ball.Spawn(GameController.Instance.paddleRed);
+                    udpHandler.SendMessage(new UdpMessage(destAddr, new CommandBallSpawn(0)));
                     break;
             }
         }
