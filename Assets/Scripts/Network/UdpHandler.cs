@@ -338,7 +338,7 @@
                 byte[] bytes = udp.EndReceive(res, ref remote);
                 var msg = new UdpMessage(remote, bytes, this);
                 messagesIn.AddLast(msg);
-                Debug.Log(remote.Address.ToString() + ": " + Encoding.ASCII.GetString(bytes));
+                Debug.Log(remote.Address.ToString() + ": " + msg.Code.ToString());
                 udp.BeginReceive(Recv, null);
             } catch(Exception ex) {
                 Debug.LogError("recv() failed: " + ex.ToString());
