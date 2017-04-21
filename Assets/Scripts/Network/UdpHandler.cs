@@ -25,7 +25,7 @@
         public string SessionId { get { return sessionId; } }
 
         protected override void Parse(byte[] data) {
-            sessionId = BitConverter.ToString(data, 4, 16);
+            sessionId = Encoding.ASCII.GetString(data);
         }
 
         public override byte[] GetBytes(string sessionId) {

@@ -73,7 +73,7 @@
         }
 
         private void Announce() {
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(CmdAnnouncingServer );
+            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(CmdAnnouncingServer);
             udp.Send(bytes, bytes.Length, new IPEndPoint(IPAddress.Broadcast, port));
             lastMsgSentTime = Time.time;
 

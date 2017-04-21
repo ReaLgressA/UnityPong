@@ -21,12 +21,13 @@
         }
 
         private void StartServer() {
-            Debug.LogError("Starting Server");
+            
             lanBc.StopBroadcasting();
             lanBc.StartAnnounceBroadcasting();
             udpHandler = new Pong.Network.UdpHandler(portGameServer);
             udpHandler.StartListening();
             role = PlayerRole.Server;
+            Debug.LogError("Starting Server -> " + udpHandler.SessionId);
         }
 
         private void ConnectToServer(string ip) {
