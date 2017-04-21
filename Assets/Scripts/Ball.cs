@@ -117,6 +117,7 @@
         }
 
         public void Launch(Vector2 dir, Vector2 pos) {
+            spawnPaddle = null;
             tr.anchoredPosition = pos;
             gameObject.SetActive(true);
             this.dir = dir;
