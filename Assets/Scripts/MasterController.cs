@@ -40,6 +40,8 @@
             btnHotseat.gameObject.SetActive(true);
             btnAI.gameObject.SetActive(true);
             brnQuit.gameObject.SetActive(true);
+            textStatus.gameObject.SetActive(true);
+            textStatus.text = string.Empty;
         }
 
         private void HideMenuScreen() {
@@ -48,6 +50,7 @@
             btnAI.gameObject.SetActive(false);
             btnHotseat.gameObject.SetActive(false);
             brnQuit.gameObject.SetActive(false);
+            textStatus.gameObject.SetActive(false);
         }
 
         private void Update() {

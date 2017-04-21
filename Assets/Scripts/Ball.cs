@@ -47,7 +47,6 @@
                 } else {
                     tr.anchoredPosition = new Vector2(GameController.Instance.rightBorder - Radius * 4, spawnPaddle.YPos);
                 }
-
                 if(spawnPaddle.IsControllable && Input.GetKeyDown(KeyCode.Space)) {
                     float angle = 45f * Mathf.Deg2Rad;//angle in range XX from sides to center of paddle
                     bool xSign = spawnPaddle.IsLeftSided;
