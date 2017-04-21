@@ -45,7 +45,7 @@
                 }
                 return;
             }
-            if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server) {
+            if(NetworkController.Instance.Role == NetworkController.PlayerRole.Server && dir != Vector2.zero) {
                 var oldPos = tr.position;
                 var pos = tr.anchoredPosition;
                 var dist = velocity * Time.deltaTime;
