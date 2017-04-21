@@ -113,7 +113,8 @@
             velocity = speedModel.GetSpeed(hitCounter);
         }
 
-        public void Launch(Vector2 dir) {
+        public void Launch(Vector2 dir, Vector2 pos) {
+            tr.anchoredPosition = pos;
             gameObject.SetActive(true);
             this.dir = dir;
             hitCounter = 0;
