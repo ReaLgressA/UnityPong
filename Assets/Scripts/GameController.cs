@@ -22,11 +22,15 @@
         public Text textScoreLeft;
         public Text textScoreRight;
         
-        public Paddle[] bats;
-
         public static GameController Instance { get { return instance; } }
         public static Ball Ball { get { return instance.ball;} }
 
+        public Paddle paddleRed;
+        public PaddleAI paddleRedAI;
+        public Paddle paddleBlue;
+        public PaddleAI paddleBlueAI;
+        
+        
         private Ball ball;
         private int scoreLeft = 0;
         private int scoreRight = 0;
@@ -40,14 +44,12 @@
             }
             instance = this;
             ball = FindObjectOfType<Ball>();
-            InitializeBats();
+            //InitializeBats();
             topBorder = gameCanvas.GetComponent<RectTransform>().sizeDelta.y / 2 - ball.Radius * 2;
             botBorder = -topBorder;
         }
         
-        private void InitializeBats() {
-            bats = FindObjectsOfType<Paddle>();
-        }
+        
 
 
         public void BallScored(Ball ball, GameSides side) {
@@ -58,9 +60,6 @@
             } else {
                 ++scoreLeft;
                 UpdateScore(textScoreLeft, scoreLeft);
-            }
-            for(int i = 0; i < bats.Length; ++i) {
-                bats[i].BallBounced();
             }
             ball.Launch(new Vector2(-0.9f, 0.2f));
         }

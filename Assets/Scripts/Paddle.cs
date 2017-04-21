@@ -2,53 +2,51 @@
     using System;
     using UnityEngine;
 
-    public enum PaddleMoveDir : Int32 {
-        None = 0,
-        Up = 1,
-        Down = -1
-    }
-
-    public enum PaddleColors : Int32 {
-        Undefined = 0,
-        Red,
-        Blue
-    }
-
     public class Paddle : MonoBehaviour {
         private RectTransform tr;
+        protected int id;
+        protected bool isControllable;
         public float curVelocity = 0f;
         public PaddleMoveDir curDir = PaddleMoveDir.None;
         public PaddleColors color = PaddleColors.Undefined;
 
+        public int Id { get { return id; } }
         public float YPos { get { InitRectTransform(); return tr.anchoredPosition.y; } }
         public float Xpos { get { InitRectTransform();  return tr.anchoredPosition.x; } }
         public bool IsLeftSided { get { InitRectTransform(); return tr.pivot.x == 0; } }
         public float HalfSize { get { InitRectTransform(); return tr.sizeDelta.y / 2; } }
-
+        public bool IsControllable { get { return isControllable; } }
         
         private void InitRectTransform() {
             if(tr == null)
                 tr = GetComponent<RectTransform>();
         }
 
-        protected virtual void Start() {
-            
-        }
+        protected virtual void Start() { }
 
         protected virtual void Update() {
-            switch(color) {
-                case PaddleColors.Red:
-                    ControlByKeycodes(new KeyCode[] { KeyCode.W, KeyCode.S });
-                    break;
-                case PaddleColors.Blue:
-                    ControlByKeycodes(new KeyCode[] { KeyCode.UpArrow, KeyCode.DownArrow });
-                    break;
-                default:
-                    Debug.LogError("Paddle color is undefined!");
-                    break;
+            if(IsControllable) {
+                switch(color) {
+                    case PaddleColors.Red:
+                        ControlByKeycodes(new KeyCode[] { KeyCode.W, KeyCode.S });
+                        break;
+                    case PaddleColors.Blue:
+                        ControlByKeycodes(new KeyCode[] { KeyCode.UpArrow, KeyCode.DownArrow });
+                        break;
+                    default:
+                        Debug.LogError("Paddle color is undefined!");
+                        break;
+                }
             }
             AcceleratePaddle();
             MovePaddle();
+        }
+
+        public void InitializePaddle(int id, PaddleColors color, bool isLeftSide, bool isControllable) {
+            this.id = id;
+            this.color = color;
+            tr.pivot = new Vector2(isLeftSide ? 0f : 1f, 0.5f);
+            this.isControllable = isControllable;
         }
 
         protected void AcceleratePaddle() {
@@ -93,7 +91,18 @@
             }
             curDir = dir;
         }
-
-        public virtual void BallBounced() { }
     }
+
+    public enum PaddleMoveDir : Int32 {
+        None = 0,
+        Up = 1,
+        Down = -1
+    }
+
+    public enum PaddleColors : Int32 {
+        Undefined = 0,
+        Red,
+        Blue
+    }
+
 }

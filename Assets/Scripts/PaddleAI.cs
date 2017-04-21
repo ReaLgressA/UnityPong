@@ -17,10 +17,6 @@
             ball = FindObjectOfType<Ball>();
         }
 
-        public override void BallBounced() {
-            yFollowPos = null;
-        }
-
         private void UpdateTactic() {
             if((isLeftSide && ball.Dir.x < 0f) || (!isLeftSide && ball.Dir.x > 0f)) {
                 if(yFollowPos == null) {

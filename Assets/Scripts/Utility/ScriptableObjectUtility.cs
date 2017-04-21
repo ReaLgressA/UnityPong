@@ -9,6 +9,7 @@ namespace Utility {
 #endif
     using System.IO;
 
+
     public static class ScriptableObjectUtility {
         /// <summary>
         //	This makes it easy to create, name and place unique new ScriptableObject asset files.

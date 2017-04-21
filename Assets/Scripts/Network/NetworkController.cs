@@ -1,7 +1,6 @@
 ﻿namespace Pong.Network {
     using UnityEngine;
     using System.Net;
-    using System;
 
     public class NetworkController : MonoBehaviour {
         public enum PlayerRole {
@@ -15,6 +14,7 @@
         protected LanBroadcaster lanBc;
         protected Pong.Network.UdpHandler udpHandler;
         protected PlayerRole role;
+
         void Start() {
             lanBc = GetComponent<LanBroadcaster>();
             lanBc.StartSearchBroadCasting(ConnectToServer, StartServer, portBroadcast);
@@ -55,26 +55,45 @@
             }
         }
 
+        private void ConnectionEstablished(CommandConnectEstablished cmd) {
+            Debug.Log("Connected to server! SessionID: " + cmd.SessionId);
+            udpHandler.SessionId = cmd.SessionId;
+        }
+
+        private void PaddleInitialized(CommandPaddleInitialized cmd) {
+            if(cmd.Color == PaddleColors.Red) {
+                GameController.Instance.paddleRed.InitializePaddle(cmd.Id, cmd.Color, cmd.IsLeftSide, cmd.IsControllable);
+            } else {
+                GameController.Instance.paddleBlue.InitializePaddle(cmd.Id, cmd.Color, cmd.IsLeftSide, cmd.IsControllable);
+            }
+        }
+
+
         private void ProcessClientMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.ConnectEstablished:
-                    var cmd = msg.cmd as CommandConnectEstablished;
-                    Debug.Log("Connected to server! SessionID: " + cmd.SessionId);
-                    
+                    ConnectionEstablished(msg.cmd as CommandConnectEstablished);
+                    break;
+                case CommandCode.PaddleInitialized:
+                    PaddleInitialized(msg.cmd as CommandPaddleInitialized);
                     break;
             }
         }
 
+        private IPEndPoint clientAddr;
         private void ProcessServerMessage(UdpMessage msg) {
             switch(msg.Code) {
                 case CommandCode.Connect:
                     Debug.Log("Incoming connection: " + msg.Remote.Address.ToString());
+                    clientAddr = msg.Remote;
                     msg.Respond(new UdpMessage(msg.Remote, new CommandConnectEstablished(udpHandler.SessionId)));
+                    GameController.Instance.paddleRed.InitializePaddle(0, PaddleColors.Red, true, true);
+                    udpHandler.SendMessage(new UdpMessage(clientAddr, new CommandPaddleInitialized(0, PaddleColors.Red, true, false)));
+                    GameController.Instance.paddleBlue.InitializePaddle(1, PaddleColors.Blue, false, false);
+                    udpHandler.SendMessage(new UdpMessage(clientAddr, new CommandPaddleInitialized(1, PaddleColors.Blue, false, true)));
+
                     break;
             }
         }
-
-
-
     }
 }

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114700365405320726}
   - component: {fileID: 114794115281230304}
   m_Layer: 5
-  m_Name: Ball
+  m_Name: Paddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
