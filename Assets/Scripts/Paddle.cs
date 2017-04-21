@@ -78,8 +78,10 @@
             } else if(Input.GetKey(codes[1])) {
                 dir = PaddleMoveDir.Down;
             }
-            NetworkController.Instance.SendUdpCommand(new CommandPaddleMove(Id, dir));
-            SetPaddleMovement(dir);
+            if(curDir != dir) {
+                NetworkController.Instance.SendUdpCommand(new CommandPaddleMove(Id, dir));
+                SetPaddleMovement(dir);
+            }
         }
 
         private void SetPosition(float yPos) {
