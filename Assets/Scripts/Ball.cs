@@ -122,7 +122,7 @@
             tr.anchoredPosition = pos;
             gameObject.SetActive(true);
             this.dir = dir;
-            hitCounter = 10;
+            hitCounter = 1;
             UpdateVelocity();
         }
     }

@@ -24,12 +24,15 @@
             udpHandler.SendMessage(new UdpMessage(destAddr, cmd, udpHandler));
         }
 
-        void Start() {
+        private void Awake() {
             if(instance != null) {
                 Destroy(gameObject);
                 return;
             }
             instance = this;
+        }
+
+        public void StartSearchForGame() {
             lanBc = GetComponent<LanBroadcaster>();
             lanBc.StartSearchBroadCasting(ConnectToServer, StartServer, portBroadcast);
         }
@@ -41,7 +44,7 @@
             udpHandler = new UdpHandler(portGameServer);
             udpHandler.StartListening();
             role = PlayerRole.Server;
-            Debug.LogError("Starting Server -> " + udpHandler.SessionId);
+            Debug.Log("Starting Server -> " + udpHandler.SessionId);
         }
 
         private void ConnectToServer(string ip) {

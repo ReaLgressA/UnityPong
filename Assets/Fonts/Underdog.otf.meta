@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 8c7138c46b592b041a7a64cdd5e7f2fb
+timeCreated: 1492759753
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Underdog
+  fontNames:
+  - Underdog
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,5 +1,4 @@
 ﻿namespace Pong {
-    using System;
     using Pong.Network;
     using UnityEngine;
     using UnityEngine.UI;
@@ -87,6 +86,10 @@
 
         private void UpdateScore(Text text, int score) {
             text.text = score.ToString();
+        }
+
+        public void StartSingleplayer() {
+
         }
     }
 }
